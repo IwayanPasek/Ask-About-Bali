@@ -13,8 +13,6 @@ web.
 | Runtime | Node.js 24.19.0 |
 | Styling | CSS murni dengan custom properties (tanpa framework CSS) |
 
-Lihat [`../docs/proposal.md`](../docs/proposal.md) untuk proposal utama proyek
-dan [`../README.md`](../README.md) untuk cara menjalankan backend.
 
 ## Menjalankan
 

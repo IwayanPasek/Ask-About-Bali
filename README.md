@@ -188,8 +188,6 @@ diisi.
 
 | Dokumen | Isi |
 | --- | --- |
-| [`docs/proposal.md`](docs/proposal.md) | **Proposal utama** — masalah, sasaran, arsitektur, tech stack, roadmap, risiko |
-| [`docs/README.md`](docs/README.md) | Index dokumentasi dan ringkasan alur `POST /api/ask` |
 | [`docs/image-search.md`](docs/image-search.md) | Image search via Google PSE |
 | [`docs/places-search.md`](docs/places-search.md) | Place lookup via Google Maps Places API |
 | [`docs/web-search.md`](docs/web-search.md) | Web search via Google PSE |
