@@ -1,0 +1,37 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# TiDB CA certificate (diunduh lokal, tidak di-commit)
+backend/certs/
+
+# Node / frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# Claude Code — pengaturan lokal per mesin
+.claude/settings.local.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,34 @@
+:root {
+  /* Warm sand neutrals */
+  --color-bg: #faf8f4;
+  --color-surface: #ffffff;
+  --color-text: #22303a;
+  --color-text-soft: #46545f;
+  --color-muted: #6f7c87;
+  --color-border: #e5e0d6;
+
+  /* Deep jade — an understated Bali accent */
+  --color-accent: #0f6b63;
+  --color-accent-soft: #e8f1ef;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}

@@ -1,0 +1,19 @@
+# Normalisasi line ending.
+# LF disimpan di dalam repository; konversi ke CRLF hanya terjadi di
+# working tree Windows (core.autocrlf), sehingga checkout di Linux/macOS
+# tidak menghasilkan diff yang tidak perlu.
+* text=auto
+
+# Berkas yang memang harus memakai CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Berkas biner — jangan disentuh.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
