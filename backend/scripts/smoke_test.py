@@ -16,7 +16,7 @@ if str(BACKEND_DIR) not in sys.path:
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-from app.main import app  # noqa: E402
+from app.api import app  # noqa: E402
 from app.services import gemini as gemini_module  # noqa: E402
 from app.services import image_search, maps, web_search  # noqa: E402
 from app.services.gemini import GeminiAnswer, GeminiResult, TokenUsage  # noqa: E402

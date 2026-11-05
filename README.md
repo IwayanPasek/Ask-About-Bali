@@ -10,7 +10,7 @@ Pertanyaan di luar cakupan Bali ditolak dengan penjelasan yang jelas.
 ## Tech Stack
 
 Status **pakai** = sudah ada di kode dan berjalan · **rencana** = target tahap
-berikutnya. Rincian lengkap ada di [`docs/proposal.md`](docs/proposal.md).
+berikutnya. Panduan deploy ada di [`docs/deployment-vercel.md`](docs/deployment-vercel.md).
 
 | Komponen | Teknologi | Versi | Status |
 | --- | --- | --- | --- |
@@ -20,19 +20,22 @@ berikutnya. Rincian lengkap ada di [`docs/proposal.md`](docs/proposal.md).
 | Image & Web Search | Google Programmable Search Engine (Custom Search JSON API) | — | pakai |
 | Peta | Google Maps Places API (New) v1 — Text Search | — | pakai |
 | Database | TiDB Cloud (MySQL-compatible) — usage log anonim saja | SQLAlchemy 2.1.8 / PyMySQL 1.2.3 | pakai |
-| Hosting | Vercel — frontend static + backend Python serverless | — | rencana |
+| Hosting | Vercel — dua project: frontend static + backend Python serverless | — | siap deploy |
 
 ## Struktur Project
 
 ```
 ask-about-bali/
 ├── frontend/        # Vue 3 (Vite) — UI chat, ganti bahasa, card gambar/lokasi/sumber
+│   └── vercel.json  # Rewrite SPA
 ├── backend/         # FastAPI — endpoint /api/ask, /api/health
+│   ├── index.py     # Entrypoint Vercel
 │   ├── app/
 │   │   ├── routers/ # ask.py
 │   │   ├── services/# gemini, image_search, web_search, maps, prompts, usage_log
 │   │   └── db/      # model + session TiDB Cloud
-│   └── scripts/     # init_db.py, smoke_test.py
+│   ├── scripts/     # init_db.py, smoke_test.py
+│   └── vercel.json  # Konfigurasi function
 ├── docs/            # Dokumentasi per tahap
 ├── .env.example     # Daftar environment variable (tanpa nilai rahasia)
 ├── .gitignore
@@ -55,7 +58,10 @@ cp .env.example .env
 | `GOOGLE_SEARCH_ENGINE_ID` | Google Programmable Search Engine | image & web search |
 | `GOOGLE_MAPS_API_KEY` | Google Cloud Console → Places API (New) | place lookup |
 | `TIDB_HOST` / `TIDB_PORT` / `TIDB_USER` / `TIDB_PASSWORD` / `TIDB_DATABASE` | TiDB Cloud → tab Connect | usage log anonim |
+| `TIDB_CA_CERT_CONTENT` | TiDB Cloud → Connect → Download CA (teks PEM) | TLS ke TiDB di Vercel |
 | `SESSION_HASH_SALT` | nilai acak buatan sendiri | hash session id pada usage log |
+| `CORS_ORIGINS` | domain frontend | origin yang boleh memanggil API |
+| `VITE_API_BASE_URL` | domain backend | alamat API untuk frontend |
 
 File `.env` sudah masuk `.gitignore` dan tidak boleh di-commit.
 
@@ -80,7 +86,7 @@ Pasang dependency lalu jalankan:
 
 ```bash
 pip install -r requirements.txt
-uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.api:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Backend berjalan di `http://127.0.0.1:8000`, dokumentasi API di `http://127.0.0.1:8000/docs`.
@@ -184,6 +190,14 @@ Mengembalikan status aplikasi, daftar service yang sudah terkonfigurasi, status
 koneksi database (`database_reachable`), dan environment variable yang masih belum
 diisi.
 
+## Deploy
+
+Deploy ke Vercel memakai **dua project** dari satu repo: satu untuk frontend
+(Vite, build statis) dan satu untuk backend (FastAPI, serverless function).
+
+Panduan lengkap — pembuatan project, environment variable, dan deployment —
+ada di [`docs/deployment-vercel.md`](docs/deployment-vercel.md`.
+
 ## Dokumentasi
 
 | Dokumen | Isi |
@@ -192,3 +206,4 @@ diisi.
 | [`docs/places-search.md`](docs/places-search.md) | Place lookup via Google Maps Places API |
 | [`docs/web-search.md`](docs/web-search.md) | Web search via Google PSE |
 | [`docs/usage-log.md`](docs/usage-log.md) | Usage log anonim di TiDB Cloud |
+| [`docs/deployment-vercel.md`](docs/deployment-vercel.md) | Panduan deploy ke Vercel |

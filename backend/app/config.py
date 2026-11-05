@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     environment: str = "development"
 
+    # Origins allowed to call the API. Comma separated. The default covers
+    # local development only; in production this is set to the deployed
+    # frontend origin.
+    cors_origins: str = "http://localhost:5173"
+
     # --- Google Gemini ---
     gemini_api_key: str = ""
     gemini_model_id: str = "gemini-3.5-flash-lite"
@@ -52,6 +57,10 @@ class Settings(BaseSettings):
     tidb_password: str = ""
     tidb_database: str = ""
     tidb_ca_cert_path: str = str(BACKEND_DIR / "certs" / "ca.pem")
+    # PEM text of the same certificate, used when the file itself is not
+    # available on disk (for example on Vercel, where the gitignored
+    # `backend/certs/` folder does not exist). Takes precedence over the path.
+    tidb_ca_cert_content: str = ""
     database_url: str = ""  # full override; wins over the tidb_* vars
     db_pool_size: int = 5
     db_max_overflow: int = 5
@@ -66,6 +75,11 @@ class Settings(BaseSettings):
         return bool(self.gemini_api_key.strip())
 
     @property
+    def cors_origin_list(self) -> list[str]:
+        """The configured CORS origins, with empty entries dropped."""
+        return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
+
+    @property
     def ca_cert_file(self) -> Path:
         """Resolve the TiDB CA certificate path.
 
@@ -76,6 +90,25 @@ class Settings(BaseSettings):
         if configured.is_absolute():
             return configured
         return (PROJECT_ROOT / configured).resolve()
+
+    def ca_cert_source(self) -> tuple[str, str] | None:
+        """Return the ``(kind, value)`` TLS material to use for TiDB.
+
+        ``kind`` is either ``"file"`` or ``"content"``. ``None`` means no
+        certificate is available, in which case the connection is made without
+        explicit TLS arguments.
+
+        The inline PEM wins because it is the only form that survives on a
+        serverless host, where the gitignored ``backend/certs`` folder is not
+        part of the deployment.
+        """
+        content = self.tidb_ca_cert_content.strip()
+        if content:
+            return ("content", content)
+        path = self.ca_cert_file
+        if path.is_file():
+            return ("file", str(path))
+        return None
 
     @property
     def has_database_config(self) -> bool:
