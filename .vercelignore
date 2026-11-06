@@ -1,0 +1,11 @@
+# Keep the upload small: only what each project's root directory needs.
+.git
+**/.venv
+**/node_modules
+**/__pycache__
+**/*.pyc
+backend/certs
+backend/.env*
+frontend/.env*
+.env
+.env.*
